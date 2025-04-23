@@ -5,9 +5,12 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -31,14 +34,12 @@ fun FoodList(items: List<FoodItem>) {
     ) {
         items(items) { item ->
             Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                Text(text = item.name)
-                Text(text = "Scade il: ${item.expiryDate}")
+                Text(text = item.name, color = Color.White)
+                Text(text = "Scade il: ${item.expiryDate}",color = Color.White)
             }
         }
     }
 }
 
-@Composable
-fun MainScreen() {
-    FoodList(items = mockFoodList)
-}
+
+

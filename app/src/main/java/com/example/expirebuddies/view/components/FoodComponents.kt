@@ -1,16 +1,17 @@
 package com.example.expirebuddies.view.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 
 
-    @Composable
+@Composable
     fun FoodInputField(
         text: String,
         onTextChange: (String) -> Unit
@@ -26,7 +27,7 @@ import androidx.compose.ui.unit.dp
     }
 
     @Composable
-    fun ExpiringDate(
+    fun ExpiringDateInputField(
         text: String,
         onTextChange: (String) -> Unit
     ){
@@ -51,3 +52,43 @@ import androidx.compose.ui.unit.dp
             Text(text = "Conferma")
         }
     }
+
+@Composable
+fun AddFoodDialog(
+    foodName:String,
+    onFoodNameChange: (String) -> Unit,
+    expiryDate: String,
+    onExpiryDateChange: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(16.dp),
+            tonalElevation = 8.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                FoodInputField(
+                    text = foodName,
+                    onTextChange = onFoodNameChange
+                )
+
+                ExpiringDateInputField(
+                    text = expiryDate,
+                    onTextChange = onExpiryDateChange
+                )
+
+                ConfirmButton(onClick = onConfirm)
+            }
+        }
+    }
+}
+
+
+
+
+
