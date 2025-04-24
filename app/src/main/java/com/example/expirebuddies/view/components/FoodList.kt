@@ -13,15 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.expirebuddies.model.FoodItem
 
-data class FoodItem(val name: String, val expiryDate: String)
 
-val mockFoodList = listOf(
-    FoodItem("Latte", "20/04/2025"),
-    FoodItem("Pane", "19/04/2025"),
-    FoodItem("Formaggio", "22/04/2025"),
-    FoodItem("Uova", "21/04/2025"),
-    FoodItem("Yogurt", "23/04/2025")
+public var mockFoodList = mutableListOf<FoodItem>(
+//    FoodItem("Latte", "20/04/2025"),
+//    FoodItem("Pane", "19/04/2025"),
+//    FoodItem("Formaggio", "22/04/2025"),
+//    FoodItem("Uova", "21/04/2025"),
+   FoodItem("Yogurt", "23/04/2025")
 )
 
 

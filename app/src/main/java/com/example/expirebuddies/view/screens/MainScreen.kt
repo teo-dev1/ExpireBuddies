@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.expirebuddies.model.FoodItem
 import com.example.expirebuddies.view.components.AddFoodDialog
 import com.example.expirebuddies.view.components.AddFoodFloatingButton
 import com.example.expirebuddies.view.components.FoodList
@@ -35,8 +36,13 @@ fun MainScreen() {
                 onConfirm = {
                     // Qui salvi i dati, es. nel DB
                     showDialog = false
+                    mockFoodList.add(FoodItem(foodName,expiryDate))
+                    foodName=""
+                    expiryDate=""
                 },
-                onDismiss = { showDialog = false }
+                onDismiss = {
+                    showDialog = false
+                }
             )
         }
     }
