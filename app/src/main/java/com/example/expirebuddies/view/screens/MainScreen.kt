@@ -2,13 +2,10 @@ package com.example.expirebuddies.view.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.expirebuddies.model.FoodItem
+import com.example.expirebuddies.model.database.Food
 import com.example.expirebuddies.view.components.AddFoodDialog
 import com.example.expirebuddies.view.components.AddFoodFloatingButton
 import com.example.expirebuddies.view.components.FoodList
@@ -22,7 +19,7 @@ fun MainScreen() {
     var expiryDate by remember { mutableStateOf("") }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        FoodList(items = mockFoodList)
+        FoodList(items = mockFoodList)//dovrà ricevere la lista di cibi in scadenza dal viewmodel
         Box(modifier = Modifier.align(Alignment.BottomEnd)){
             AddFoodFloatingButton(onClick = { showDialog = true })
         }
@@ -36,7 +33,7 @@ fun MainScreen() {
                 onConfirm = {
                     // Qui salvi i dati, es. nel DB
                     showDialog = false
-                    mockFoodList.add(FoodItem(foodName,expiryDate))
+                    //mockFoodList.add(Food(foodName,expiryDate)) //dovrà aggiungere cibi al database tramite viewmodel
                     foodName=""
                     expiryDate=""
                 },
