@@ -2,11 +2,12 @@ package com.example.expirebuddies.model.localrepository
 
 import com.example.expirebuddies.model.database.Food
 import com.example.expirebuddies.model.database.FoodDao
+import kotlinx.coroutines.flow.Flow
 
 class LocalRepositoryImplementation(
     private val dao:FoodDao
 ):LocalRepository {
-    override suspend fun getFoods(): List<Food> {
+    override suspend fun getFoods(): Flow<List<Food>> {
         return dao.getAllFoods()
     }
 

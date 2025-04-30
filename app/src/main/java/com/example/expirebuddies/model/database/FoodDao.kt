@@ -1,16 +1,14 @@
 package com.example.expirebuddies.model.database
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FoodDao {
-    @Insert
+    @Upsert
     fun addFood(food: Food)
     @Query("SELECT * FROM food_table ORDER BY expiryDate")
-    fun getAllFoods():List<Food>
+    fun getAllFoods(): Flow<List<Food>>
     @Query("SELECT * FROM food_table WHERE id=:id")
     fun getFoodById(id:Int):Food
     @Delete

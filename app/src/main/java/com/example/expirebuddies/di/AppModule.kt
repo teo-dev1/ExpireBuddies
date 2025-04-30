@@ -1,17 +1,16 @@
 package com.example.expirebuddies.di
 
-import android.content.Context
-import androidx.room.Database
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.example.expirebuddies.ExpireBuddiesApp
-import com.example.expirebuddies.model.database.FoodDao
 import com.example.expirebuddies.model.database.FoodDatabase
 import com.example.expirebuddies.model.localrepository.LocalRepositoryImplementation
+import com.example.expirebuddies.model.usecases.AddFood
+import com.example.expirebuddies.model.usecases.DeleteFood
+import com.example.expirebuddies.model.usecases.FoodManipulationUseCases
+import com.example.expirebuddies.model.usecases.GetFoods
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -29,6 +28,16 @@ object AppModule {
     @Singleton
     fun provideLocalRepository(database:FoodDatabase):LocalRepositoryImplementation{
         return LocalRepositoryImplementation(database.foodDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFoodManipulationUseCases(repositoryImplementation: LocalRepositoryImplementation):FoodManipulationUseCases{
+        return FoodManipulationUseCases(
+            getFoods = GetFoods(repositoryImplementation),
+            deleteFood = DeleteFood(repositoryImplementation),
+            addFood = AddFood(repositoryImplementation)
+        )
     }
 
 
