@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ExpireBuddies</string>
+    <string name="invalid_name">Invalid Item Name!</string>
+    <string name="invalid_date">Invalid Item Date!</string>
+    <string name="most_recent">Most Recent</string>
+    <string name="least_recent">Least Recent</string>
 </resources>

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FoodDao {
     @Upsert
-    fun addFood(food: Food)
+    fun addFood(food: Food?)
     @Query("SELECT * FROM food_table ORDER BY expiryDate")
     fun getAllFoods(): Flow<List<Food>>
     @Query("SELECT * FROM food_table WHERE id=:id")

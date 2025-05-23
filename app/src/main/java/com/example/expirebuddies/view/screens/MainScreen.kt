@@ -5,21 +5,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.expirebuddies.model.database.Food
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.expirebuddies.model.OrderType
 import com.example.expirebuddies.view.components.AddFoodDialog
 import com.example.expirebuddies.view.components.AddFoodFloatingButton
 import com.example.expirebuddies.view.components.FoodList
-import com.example.expirebuddies.view.components.mockFoodList
+import com.example.expirebuddies.viewmodel.FoodMainViewModel
 
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    navController: NavController,
+    viewmodel:FoodMainViewModel= hiltViewModel()) {
     var showDialog by remember { mutableStateOf(false) }
     var foodName by remember { mutableStateOf("") }
     var expiryDate by remember { mutableStateOf("") }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        FoodList(items = mockFoodList)//dovrà ricevere la lista di cibi in scadenza dal viewmodel
+        FoodList(items = viewmodel.getFoods(OrderType.Descending))//dovrà ricevere la lista di cibi in scadenza dal viewmodel
         Box(modifier = Modifier.align(Alignment.BottomEnd)){
             AddFoodFloatingButton(onClick = { showDialog = true })
         }

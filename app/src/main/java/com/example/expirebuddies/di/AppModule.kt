@@ -41,7 +41,5 @@ object AppModule {
     }
 
 
-    //TODO aggiungere i provide mancanti
-    //TODO creare gli usecases e racchiuderli in una classe a seconda del contesto in cui vengono utilizzati
 
 }

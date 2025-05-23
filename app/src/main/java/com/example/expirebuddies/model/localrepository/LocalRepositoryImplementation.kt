@@ -11,8 +11,7 @@ class LocalRepositoryImplementation(
         return dao.getAllFoods()
     }
 
-
-    override suspend fun addFood(food: Food) {
+    override suspend fun addFood(food: Food?) {
         dao.addFood(food)
     }
 

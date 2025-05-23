@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalRepository {
      suspend fun getFoods(): Flow<List<Food>>
-     suspend fun addFood(food: Food)
+     suspend fun addFood(food: Food?)
      suspend fun getFoodbyId(id:Int):Food
      suspend fun deleteFood(food: Food)
 }
