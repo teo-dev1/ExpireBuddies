@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +23,7 @@ class FoodMainViewModel @Inject constructor(
 
 
     private val _foods = MutableStateFlow<List<Food>>(emptyList())
-    private val foods:StateFlow<List<Food>> = _foods
+    val foods:StateFlow<List<Food>> = _foods
 
     private var getFoodsJob: Job?=null //tengo traccia della coroutine che chiamo per avere la lista dei cibi, cosicchè se dovesse essere già stata chiamata in precedenza la cancello e ne avvio una nuova
 
@@ -35,7 +36,7 @@ class FoodMainViewModel @Inject constructor(
         getFoods(OrderType.Descending)
     }
 
-    fun onEvent(event: FoodEvent){
+   suspend fun onEvent(event: FoodEvent){
         when (event){
             is FoodEvent.DeleteFood -> {
                 deleteFood(event.food)
@@ -54,11 +55,13 @@ class FoodMainViewModel @Inject constructor(
     }
 
 
-
     fun getFoods(order: OrderType){
         getFoodsJob?.cancel()
         getFoodsJob=viewModelScope.launch {
             useCases.getFoods(order)
+                .onEach { foods ->
+                    _foods.value= foods
+                }.launchIn(viewModelScope)
         }
     }
 

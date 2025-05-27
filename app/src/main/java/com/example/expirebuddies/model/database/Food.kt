@@ -10,5 +10,5 @@ data class Food(
     val id:Int?=0,
     val name: String,
     val expiryDate: String,
-    val timestamp: Long=System.currentTimeMillis()
+    val timestamp: Long/*=System.currentTimeMillis()*/
     )

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class LocalRepositoryImplementation(
     private val dao:FoodDao
 ):LocalRepository {
-    override suspend fun getFoods(): Flow<List<Food>> {
+    override fun getFoods(): Flow<List<Food>> {
         return dao.getAllFoods()
     }
 

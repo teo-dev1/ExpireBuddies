@@ -4,7 +4,7 @@ import com.example.expirebuddies.model.database.Food
 import kotlinx.coroutines.flow.Flow
 
 interface LocalRepository {
-     suspend fun getFoods(): Flow<List<Food>>
+     fun getFoods(): Flow<List<Food>>
      suspend fun addFood(food: Food?)
      suspend fun getFoodbyId(id:Int):Food
      suspend fun deleteFood(food: Food)

@@ -10,12 +10,14 @@ import com.example.expirebuddies.model.database.Food
 import com.example.expirebuddies.model.usecases.FoodManipulationUseCases
 import com.example.expirebuddies.model.usecases.InvalidFood
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class AddEditFoodViewModel(
+class AddEditFoodViewModel @Inject constructor(
     private val foodManipulationUseCases: FoodManipulationUseCases
 ) : ViewModel() {
 
@@ -34,25 +36,31 @@ class AddEditFoodViewModel(
         when (event) {
             is UiAddEditFoodEvent.EnteredFoodName -> {
                 _foodName.value = event.name
+                println("sto cambiando nome valore attuale -> ${_foodName.value}" )
 
             }
 
             is UiAddEditFoodEvent.EnteredExpiryDate -> {
                 _foodExpiryDate.value = event.date
+                println("sto cambiando data valore attuale -> ${_foodExpiryDate.value}" )
             }
 
             is UiAddEditFoodEvent.AddFoodEvent -> {
+                println("ho aggiunto "+ foodName.value + " " + foodExpiryDate.value)
                 try {
-
-                    addFood(
-                        Food(
-                            null,
-                            foodName.value,
-                            foodExpiryDate.value,
+                    viewModelScope.launch(Dispatchers.IO){
+                        addFood(
+                            Food(
+                                null,
+                                foodName.value,
+                                foodExpiryDate.value,
+                                System.currentTimeMillis()
+                            )
                         )
-                    )
-                }catch (error:InvalidFood){
+                    }
 
+                }catch (error:InvalidFood){
+                    println("PROBLEMI PROBLEMI PROBLEMI!")
                 }
             }
 
@@ -60,9 +68,7 @@ class AddEditFoodViewModel(
     }
 
     suspend fun addFood(food: Food) {
-        viewModelScope.launch {
             foodManipulationUseCases.addFood.invoke(food)
-        }
     }
 
 

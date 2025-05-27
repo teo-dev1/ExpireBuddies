@@ -9,12 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.expirebuddies.viewmodel.AddEditFoodViewModel
 
 
 @Composable
     fun FoodInputField(
         text: String,
-        onTextChange: (String) -> Unit
+        onTextChange: (String) -> Unit,
     ) {
         TextField(
             value = text,
@@ -74,7 +76,7 @@ fun AddFoodDialog(
             ) {
                 FoodInputField(
                     text = foodName,
-                    onTextChange = onFoodNameChange
+                    onTextChange =  onFoodNameChange
                 )
 
                 ExpiringDateInputField(

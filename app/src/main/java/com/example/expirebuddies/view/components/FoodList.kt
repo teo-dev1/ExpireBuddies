@@ -15,13 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.example.expirebuddies.model.database.Food
 
 
-public var mockFoodList = mutableListOf<Food>(
-//    FoodItem("Latte", "20/04/2025"),
-//    FoodItem("Pane", "19/04/2025"),
-//    FoodItem("Formaggio", "22/04/2025"),
-//    FoodItem("Uova", "21/04/2025"),
-//   Food("Yogurt", "23/04/2025")
-)
+
 
 
 @Composable
@@ -46,8 +40,9 @@ fun FoodItem(food: Food){
         elevation = CardDefaults.cardElevation()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = food.name, style = MaterialTheme.typography.titleLarge)
-            Text(text = "Scadenza: ${food.expiryDate}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = food.name, style = MaterialTheme.typography.titleLarge, color = Color.White)
+            Text(text = "Scadenza: ${food.expiryDate}", style = MaterialTheme.typography.bodyMedium, color = Color.White)
+            Text(text = "Aggiunto il: ${food.timestamp}",style =MaterialTheme.typography.bodySmall, color = Color.White)
         }
     }
 }

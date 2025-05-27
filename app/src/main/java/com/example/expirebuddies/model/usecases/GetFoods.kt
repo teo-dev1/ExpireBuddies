@@ -10,7 +10,7 @@ class GetFoods(
     val repositoryImplementation: LocalRepositoryImplementation
 ) {
 
-    suspend operator fun invoke(orderType: OrderType=OrderType.Descending): Flow<List<Food>> {
+     operator fun invoke(orderType: OrderType=OrderType.Descending): Flow<List<Food>> {
         return repositoryImplementation.getFoods().map { foods ->
             when (orderType){
                 OrderType.Ascending -> {foods.sortedBy {it.timestamp  } }
