@@ -12,6 +12,8 @@ import com.example.expirebuddies.model.usecases.InvalidFood
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +29,7 @@ class AddEditFoodViewModel @Inject constructor(
 
     private val _foodExpiryDate = mutableStateOf("")
     val foodExpiryDate: State<String> = _foodExpiryDate
+
 
     private val _eventFlow = MutableSharedFlow<UiAddEditFoodEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -63,12 +66,15 @@ class AddEditFoodViewModel @Inject constructor(
                     println("PROBLEMI PROBLEMI PROBLEMI!")
                 }
             }
-
         }
     }
 
     suspend fun addFood(food: Food) {
             foodManipulationUseCases.addFood.invoke(food)
+    }
+
+    suspend fun getFoodById(id: Int){
+        foodManipulationUseCases.getFood.invoke(id)
     }
 
 

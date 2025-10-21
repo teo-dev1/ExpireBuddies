@@ -8,6 +8,7 @@ import com.example.expirebuddies.model.OrderType
 import com.example.expirebuddies.model.database.Food
 import com.example.expirebuddies.model.usecases.FoodManipulationUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,58 +20,89 @@ import javax.inject.Inject
 @HiltViewModel
 class FoodMainViewModel @Inject constructor(
     private val useCases: FoodManipulationUseCases
-):ViewModel() {
+) : ViewModel() {
 
 
     private val _foods = MutableStateFlow<List<Food>>(emptyList())
-    val foods:StateFlow<List<Food>> = _foods
+    val foods: StateFlow<List<Food>> = _foods
 
-    private var getFoodsJob: Job?=null //tengo traccia della coroutine che chiamo per avere la lista dei cibi, cosicchè se dovesse essere già stata chiamata in precedenza la cancello e ne avvio una nuova
+    private var getFoodsJob: Job? = null //tengo traccia della coroutine che chiamo per avere la lista dei cibi, cosicchè se dovesse essere già stata chiamata in precedenza la cancello e ne avvio una nuova
 
-    private var lastDeletedFood:Food?=null
+    private var lastDeletedFood: Food? = null
 
-     //TODO diversificare le azioni dell utente, e capire cosa fare in base ad essa utilizzando la classe useraction creata sotto
+    private val _selectedFood = MutableStateFlow<Food?>(null)
+    val selectedFood: StateFlow<Food?> = _selectedFood
+
+    private val _isDialogOpen = MutableStateFlow(false)
+    val isDialogOpen: StateFlow<Boolean> = _isDialogOpen
+
+    //TODO diversificare le azioni dell utente, e capire cosa fare in base ad essa utilizzando la classe useraction creata sotto
 
 
     init {
         getFoods(OrderType.Descending)
     }
 
-   suspend fun onEvent(event: FoodEvent){
-        when (event){
+     fun onEvent(event: FoodEvent) {
+        when (event) {
             is FoodEvent.DeleteFood -> {
                 deleteFood(event.food)
-                lastDeletedFood=event.food
+                lastDeletedFood = event.food
             }
-            is FoodEvent.Order ->{
+            is FoodEvent.Order -> {
                 getFoods(event.order)
             }
             FoodEvent.RestoreFood -> {
                 viewModelScope.launch {
                     addFood(lastDeletedFood)
-                    lastDeletedFood=null
+                    lastDeletedFood = null
                 }
             }
+            is FoodEvent.FoodSelected -> {
+                openDialog()
+                viewModelScope.launch(Dispatchers.IO) {
+                    val food: Food = useCases.getFood.invoke(event.id)!!
+                    _selectedFood.value = food
+                }
+            }
+
         }
     }
 
 
-    fun getFoods(order: OrderType){
+    fun openDialog(){
+        _isDialogOpen.value = true
+    }
+
+    fun dialogClosed(){
+        _isDialogOpen.value = false
+    }
+
+    fun onDialogDismiss(){
+        _isDialogOpen.value = false
+        _selectedFood.value = null
+    }
+
+
+
+
+    fun getFoods(order: OrderType) {
         getFoodsJob?.cancel()
-        getFoodsJob=viewModelScope.launch {
+        getFoodsJob = viewModelScope.launch {
             useCases.getFoods(order)
                 .onEach { foods ->
-                    _foods.value= foods
+                    _foods.value = foods
                 }.launchIn(viewModelScope)
         }
     }
 
-    fun addFood(food: Food?){ //va in altro viewmodel
+    fun addFood(food: Food?) { //va in altro viewmodel
         viewModelScope.launch {
             useCases.addFood(food)
         }
     }
-    fun deleteFood(food: Food){
+
+    fun deleteFood(food: Food) {
         viewModelScope.launch {
             useCases.deleteFood(food = food)
         }
@@ -79,11 +111,11 @@ class FoodMainViewModel @Inject constructor(
 }
 
 
-sealed class FoodEvent(){
-    data class Order(val order:OrderType):FoodEvent()
-    data class DeleteFood(val food: Food):FoodEvent()
-    object RestoreFood:FoodEvent()
-
+sealed class FoodEvent() {
+    data class Order(val order: OrderType) : FoodEvent()
+    data class DeleteFood(val food: Food) : FoodEvent()
+    data class FoodSelected(val id: Int) : FoodEvent()
+    object RestoreFood : FoodEvent()
 
 
 }
