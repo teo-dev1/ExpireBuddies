@@ -36,6 +36,9 @@ class FoodMainViewModel @Inject constructor(
     private val _isDialogOpen = MutableStateFlow(false)
     val isDialogOpen: StateFlow<Boolean> = _isDialogOpen
 
+    private val _isFoodSelected = MutableStateFlow(false)
+    val isFoodSelected=_isFoodSelected
+
     //TODO diversificare le azioni dell utente, e capire cosa fare in base ad essa utilizzando la classe useraction creata sotto
 
 
@@ -60,12 +63,15 @@ class FoodMainViewModel @Inject constructor(
             }
             is FoodEvent.FoodSelected -> {
                 openDialog()
+                foodSelected()
                 viewModelScope.launch(Dispatchers.IO) {
                     val food: Food = useCases.getFood.invoke(event.id)!!
                     _selectedFood.value = food
                 }
             }
-
+            is FoodEvent.FoodNotSelected -> {
+               foodNotSelected()
+            }
         }
     }
 
@@ -73,6 +79,15 @@ class FoodMainViewModel @Inject constructor(
     fun openDialog(){
         _isDialogOpen.value = true
     }
+
+    fun foodSelected(){
+        _isFoodSelected.value=true
+    }
+
+    fun foodNotSelected(){
+        _isFoodSelected.value=false
+    }
+
 
     fun dialogClosed(){
         _isDialogOpen.value = false
@@ -115,6 +130,7 @@ sealed class FoodEvent() {
     data class Order(val order: OrderType) : FoodEvent()
     data class DeleteFood(val food: Food) : FoodEvent()
     data class FoodSelected(val id: Int) : FoodEvent()
+    object FoodNotSelected:FoodEvent()
     object RestoreFood : FoodEvent()
 
 

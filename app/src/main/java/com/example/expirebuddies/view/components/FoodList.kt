@@ -41,7 +41,6 @@ fun FoodList(
 fun FoodItem(
     food: Food,
     onItemClick: () -> Unit = {
-
     }
 ) {
     Card(

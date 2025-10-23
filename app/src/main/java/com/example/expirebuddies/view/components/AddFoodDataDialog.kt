@@ -9,8 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.expirebuddies.viewmodel.AddEditFoodViewModel
 
 
 @Composable
@@ -56,7 +54,7 @@ import com.example.expirebuddies.viewmodel.AddEditFoodViewModel
     }
 
 @Composable
-fun AddFoodDialog(
+fun FoodDialog(
     foodName:String,
     onFoodNameChange: (String) -> Unit,
     expiryDate: String,

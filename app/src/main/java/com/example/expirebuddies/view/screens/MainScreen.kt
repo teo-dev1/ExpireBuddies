@@ -7,9 +7,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.expirebuddies.model.OrderType
 import com.example.expirebuddies.model.database.Food
-import com.example.expirebuddies.view.components.AddFoodDialog
+import com.example.expirebuddies.view.components.FoodDialog
 import com.example.expirebuddies.view.components.AddFoodFloatingButton
 import com.example.expirebuddies.view.components.FoodList
 import com.example.expirebuddies.viewmodel.AddEditFoodViewModel
@@ -31,6 +30,7 @@ fun MainScreen(
     val isDialogOpen by mainViewModel.isDialogOpen.collectAsState()
     val foodList by mainViewModel.foods.collectAsState()
     val selectedFood by mainViewModel.selectedFood.collectAsState()
+    val isFoodSelected by mainViewModel.isFoodSelected.collectAsState()//tiene in memoria se deve mostrare la dialog con i dati per modificare il cibo che ho selezionato dalla lista o senza, per aggiungerne uno nuovo perchè è stato premuto il bottone add
 
 
 
@@ -43,33 +43,34 @@ fun MainScreen(
         }
 
         if (isDialogOpen) {
-            var name = addEditFoodViewModel.foodName.value
-            var expiryDate = addEditFoodViewModel.foodExpiryDate.value
-            AddFoodDialog(
-                foodName = name,
-                onFoodNameChange = {
-                    scope.launch {
-                        addEditFoodViewModel.onEvent(UiAddEditFoodEvent.EnteredFoodName(it))
+            if (!isFoodSelected) {}
+                var name = addEditFoodViewModel.foodName.value
+                var expiryDate = addEditFoodViewModel.foodExpiryDate.value
+                FoodDialog(
+                    foodName = name,
+                    onFoodNameChange = {
+                        scope.launch {
+                            addEditFoodViewModel.onEvent(UiAddEditFoodEvent.EnteredFoodName(it))
+                        }
+                    },
+                    expiryDate = expiryDate,
+                    onExpiryDateChange = {
+                        scope.launch {
+                            addEditFoodViewModel.onEvent(UiAddEditFoodEvent.EnteredExpiryDate(it))
+                        }
+                    },
+                    onConfirm = {
+                        // Qui salvi i dati, es. nel DB
+                        scope.launch(Dispatchers.IO) {
+                            addEditFoodViewModel.onEvent(UiAddEditFoodEvent.AddFoodEvent)
+                        }
+                        //mockFoodList.add(Food(foodName,expiryDate)) //dovrà aggiungere cibi al database tramite viewmodel
+                    },
+                    onDismiss = {
+                        mainViewModel.selectedFood
                     }
-                },
-                expiryDate = expiryDate,
-                onExpiryDateChange = {
-                    scope.launch {
-                        addEditFoodViewModel.onEvent(UiAddEditFoodEvent.EnteredExpiryDate(it))
-                    }
-                },
-                onConfirm = {
-                    // Qui salvi i dati, es. nel DB
                     isDialogOpen
-                    scope.launch(Dispatchers.IO) {
-                        addEditFoodViewModel.onEvent(UiAddEditFoodEvent.AddFoodEvent)
-                    }
-                    //mockFoodList.add(Food(foodName,expiryDate)) //dovrà aggiungere cibi al database tramite viewmodel
-                },
-                onDismiss = {
-                    mainViewModel.selectedFood
-                }
-            )
+                )
         }
     }
 }
