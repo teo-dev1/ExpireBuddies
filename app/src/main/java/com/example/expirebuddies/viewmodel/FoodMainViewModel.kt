@@ -1,25 +1,26 @@
 package com.example.expirebuddies.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expirebuddies.model.OrderType
 import com.example.expirebuddies.model.database.Food
+import com.example.expirebuddies.model.remotedata.remoterepository.RemoteRepository
 import com.example.expirebuddies.model.usecases.FoodManipulationUseCases
+import com.example.expirebuddies.model.usecases.InvalidFood
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FoodMainViewModel @Inject constructor(
-    private val useCases: FoodManipulationUseCases
+    private val useCases: FoodManipulationUseCases,
+    private val remoteRepo:RemoteRepository
 ) : ViewModel() {
 
 
@@ -39,11 +40,25 @@ class FoodMainViewModel @Inject constructor(
     private val _isFoodSelected = MutableStateFlow(false)
     val isFoodSelected=_isFoodSelected
 
+    private val _foodName = mutableStateOf("")
+    val foodName: State<String> = _foodName
+
+    private val _foodExpiryDate = mutableStateOf("")
+    val foodExpiryDate: State<String> = _foodExpiryDate
+
+
+    private val _eventFlow = MutableSharedFlow<FoodEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
     //TODO diversificare le azioni dell utente, e capire cosa fare in base ad essa utilizzando la classe useraction creata sotto
 
 
     init {
         getFoods(OrderType.Descending)
+
+        viewModelScope.launch {
+            printRemoteData()
+        }
     }
 
      fun onEvent(event: FoodEvent) {
@@ -66,11 +81,43 @@ class FoodMainViewModel @Inject constructor(
                 foodSelected()
                 viewModelScope.launch(Dispatchers.IO) {
                     val food: Food = useCases.getFood.invoke(event.id)!!
-                    _selectedFood.value = food
+                    _selectedFood.value = food.copy()
+                    _foodName.value=food.name
+                    _foodExpiryDate.value=food.expiryDate
                 }
             }
             is FoodEvent.FoodNotSelected -> {
                foodNotSelected()
+            }
+            is FoodEvent.EnteredFoodName -> {
+                _foodName.value = event.name
+                println("sto cambiando nome valore attuale -> ${_foodName.value}" )
+
+            }
+
+            is FoodEvent.EnteredExpiryDate -> {
+                _foodExpiryDate.value = event.date
+                println("sto cambiando data valore attuale -> ${_foodExpiryDate.value}" )
+            }
+
+            is FoodEvent.AddFoodEvent -> {
+                println("ho aggiunto "+ foodName.value + " " + foodExpiryDate.value)
+                try {
+                    viewModelScope.launch(Dispatchers.IO){
+
+                        addFood(
+                            Food(
+                                if (_isFoodSelected.value)selectedFood.value.let {it?.id} else null,
+                                foodName.value,
+                                foodExpiryDate.value,
+                                System.currentTimeMillis()
+                            )
+                        )
+                    }
+
+                }catch (error: InvalidFood){
+                    println("PROBLEMI PROBLEMI PROBLEMI!")
+                }
             }
         }
     }
@@ -91,13 +138,8 @@ class FoodMainViewModel @Inject constructor(
 
     fun dialogClosed(){
         _isDialogOpen.value = false
+        _selectedFood.value=null
     }
-
-    fun onDialogDismiss(){
-        _isDialogOpen.value = false
-        _selectedFood.value = null
-    }
-
 
 
 
@@ -123,6 +165,18 @@ class FoodMainViewModel @Inject constructor(
         }
     }
 
+    suspend fun addFood(food: Food) {
+        useCases.addFood.invoke(food)
+    }
+
+    suspend fun getFoodById(id: Int){
+        useCases.getFood.invoke(id)
+    }
+
+    suspend fun printRemoteData(){
+        Log.d("POST",remoteRepo.getData().toString())
+    }
+
 }
 
 
@@ -133,7 +187,10 @@ sealed class FoodEvent() {
     object FoodNotSelected:FoodEvent()
     object RestoreFood : FoodEvent()
 
-
+    //importate
+    data class EnteredFoodName(val name: String) : FoodEvent()
+    data class EnteredExpiryDate(val date: String) : FoodEvent()
+    object AddFoodEvent : FoodEvent()
 }
 
 sealed class FoodState
