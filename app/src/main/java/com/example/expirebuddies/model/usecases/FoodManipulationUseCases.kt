@@ -5,6 +5,4 @@ data class FoodManipulationUseCases(
     val addFood:AddFood,
     val deleteFood:DeleteFood,
     val getFood:GetFood
-
-
 )

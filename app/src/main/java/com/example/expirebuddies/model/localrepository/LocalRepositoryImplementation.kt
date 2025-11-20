@@ -3,6 +3,7 @@ package com.example.expirebuddies.model.localrepository
 import com.example.expirebuddies.model.database.Food
 import com.example.expirebuddies.model.database.FoodDao
 import kotlinx.coroutines.flow.Flow
+import java.util.Locale.Category
 
 class LocalRepositoryImplementation(
     private val dao:FoodDao
@@ -22,4 +23,6 @@ class LocalRepositoryImplementation(
     override suspend fun deleteFood(food: Food) {
         dao.deleteFood(food)
     }
+
+
 }
