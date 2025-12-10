@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.expirebuddies.model.OrderType
+import com.example.expirebuddies.general.OrderType
 import com.example.expirebuddies.model.database.Food
 import com.example.expirebuddies.model.remotedata.remoterepository.RemoteRepository
 import com.example.expirebuddies.model.usecases.FoodManipulationUseCases
@@ -20,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class FoodMainViewModel @Inject constructor(
     private val useCases: FoodManipulationUseCases,
-    private val remoteRepo:RemoteRepository
 ) : ViewModel() {
 
 
@@ -55,10 +54,6 @@ class FoodMainViewModel @Inject constructor(
 
     init {
         getFoods(OrderType.Descending)
-
-        viewModelScope.launch {
-            printRemoteData()
-        }
     }
 
      fun onEvent(event: FoodEvent) {
@@ -171,10 +166,6 @@ class FoodMainViewModel @Inject constructor(
 
     suspend fun getFoodById(id: Int){
         useCases.getFood.invoke(id)
-    }
-
-    suspend fun printRemoteData(){
-        Log.d("POST",remoteRepo.getData().toString())
     }
 
 }

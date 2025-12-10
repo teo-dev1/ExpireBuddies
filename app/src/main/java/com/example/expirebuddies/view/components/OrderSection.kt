@@ -6,12 +6,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.expirebuddies.R
-import com.example.expirebuddies.model.OrderType
+import com.example.expirebuddies.general.OrderType
 
 @Composable
 fun OrderSection(
     modifier: Modifier=Modifier,
-    order:OrderType=OrderType.Descending,
+    order: OrderType = OrderType.Descending,
 ){
     Column(
         modifier = modifier

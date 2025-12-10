@@ -9,11 +9,15 @@ interface IRemoteRepository{
     suspend fun getData():List<PostResponse>
 }
 
-class RemoteRepository @Inject constructor(private val api:ApiSerivceImplementation):IRemoteRepository {
+class RemoteRepository @Inject constructor(private val api:ApiSerivceImplementation):IRemoteRepository { //era la prova con ktor, si può eliminare questa classe
 
     override suspend fun getData():List<PostResponse>{
         return api.getData()
     }
+
+
+
+
 
 
 }
