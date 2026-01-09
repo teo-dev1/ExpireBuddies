@@ -4,7 +4,7 @@ import com.example.expirebuddies.model.authentication.IUserGestor
 import com.example.expirebuddies.model.authentication.User
 import javax.inject.Inject
 
-class DeleteUser @Inject constructor(
+class DeleteUser(
     val userGestor: IUserGestor
 ) {
    suspend operator fun invoke(user:User){

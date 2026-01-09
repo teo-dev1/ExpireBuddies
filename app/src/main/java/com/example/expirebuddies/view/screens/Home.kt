@@ -8,12 +8,12 @@ import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.expirebuddies.view.colors.AppTheme
 import com.example.expirebuddies.view.navigation.BottomNavigationBar
 
 @Composable
 fun Home() {
     val navController = rememberNavController()
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(rootNavController = navController)
@@ -30,8 +30,10 @@ fun Home() {
                 UserCreationScreen()
             }
 
-            composable("home"){
+            composable("home") {
+                HomeScreen()
             }
         }
     }
+
 }

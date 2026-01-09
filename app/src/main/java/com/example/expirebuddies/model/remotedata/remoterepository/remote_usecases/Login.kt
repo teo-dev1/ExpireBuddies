@@ -6,7 +6,7 @@ import com.example.expirebuddies.model.authentication.UserGestor
 import com.example.expirebuddies.model.remotedata.remoterepository.IUserRemoteRepository
 import javax.inject.Inject
 
-class Login @Inject constructor(
+class Login (
     val remoteRepository: IUserRemoteRepository
 ){
     suspend operator fun invoke(user: User) {

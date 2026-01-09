@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "643730071764",
+    "project_id": "expirebuddies",
+    "storage_bucket": "expirebuddies.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643730071764:android:af446204d99d2fde26db41",
+        "android_client_info": {
+          "package_name": "com.example.expirebuddies"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOgo9E_NvJmpQFpcI-V0P8Su4aat4P1eA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

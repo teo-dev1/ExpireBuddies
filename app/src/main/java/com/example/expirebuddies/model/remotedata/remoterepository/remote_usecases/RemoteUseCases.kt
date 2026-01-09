@@ -4,8 +4,7 @@ package com.example.expirebuddies.model.remotedata.remoterepository.remote_useca
 
 data class RemoteUseCases(
     val createUser: CreateUser,
-    val deleteUser: DeleteUser,
-    val updateUser: UpdateUser,
-
+    /*val deleteUser: DeleteUser,
+    val updateUser: UpdateUser,*/
     val login: Login
 )

@@ -23,32 +23,40 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.expirebuddies.model.authentication.User
 import com.example.expirebuddies.view.colors.AppTheme
 import com.example.expirebuddies.view.colors.Typography
+import com.example.expirebuddies.viewmodel.UserCreationEvent
+import com.example.expirebuddies.viewmodel.UserCreationViewModel
 import java.util.*
 import kotlin.text.Typography
 
 //@Preview
-//@Composable
-//fun TestPreview() {
-//    Text("Funziona?")
-//}
+@Composable
+fun TestPreview() {
+    Text("Funziona?")
+}
 
-@Preview(showBackground = true, showSystemUi = false)
+@Preview()
 @Composable
 fun UserCreationScreen(
-    onCreateAccount: (String, String, String, String) -> Unit = { _, _, _, _ -> },
-    onGoogleLogin: () -> Unit = {},
-    onFacebookLogin: () -> Unit = {}
+   viewmodel:UserCreationViewModel = hiltViewModel()
 ) {
-    AppTheme(
-    ) {
         RegisterScreen(
-            onCreateAccount = onCreateAccount,
-            onGoogleLogin = onGoogleLogin,
-            onFacebookLogin = onFacebookLogin
+            onCreateAccount = { username,date,email,password->
+                val user= User(
+                    name = username,
+                    email = email,
+                    dateOfBirth = date.toLong(),
+                    password = password
+
+                )
+                viewmodel.onEvent(UserCreationEvent.CreateUser(user))
+                              },
+            onGoogleLogin = {},
+            onFacebookLogin = {}
         )
-    }
 }
 
 @Composable
@@ -183,7 +191,24 @@ fun RegisterScreen(
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun BirthDatePicker(
+        onDateSelected: (Long) -> Unit
+    ) {
+        val datePickerState = rememberDatePickerState()
 
+        DatePicker(
+            state = datePickerState,
+            showModeToggle = false
+        )
+
+        LaunchedEffect(datePickerState.selectedDateMillis) {
+            datePickerState.selectedDateMillis?.let { millis ->
+                onDateSelected(millis)
+            }
+        }
+    }
 
 
 }

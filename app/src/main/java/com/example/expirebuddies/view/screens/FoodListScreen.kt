@@ -5,10 +5,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.expirebuddies.model.database.Food
+import com.example.expirebuddies.view.colors.AppTheme
 import com.example.expirebuddies.view.components.FoodDialog
 import com.example.expirebuddies.view.components.AddFoodFloatingButton
 import com.example.expirebuddies.view.components.FoodList
@@ -96,10 +98,6 @@ fun FoodListScreen(
         )
     }
 }
-
-
-
-
 
 
 public var mockFoodList = mutableListOf<Food>(
